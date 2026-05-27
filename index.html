@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Crypto Tracker</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 30px auto; padding: 20px; }
+    select, button { padding: 6px 10px; font-size: 14px; }
+    .card { margin-top: 20px; padding: 15px; border: 1px solid #ccc; }
+    .card img { width: 64px; }
+  </style>
+</head>
+<body>
+
+  <h1>Crypto Tracker</h1>
+
+  <label>Оберіть валюту:</label>
+  <select id="coin">
+    <option value="bitcoin">Bitcoin</option>
+    <option value="ethereum">Ethereum</option>
+    <option value="tether">Tether</option>
+    <option value="binancecoin">BNB</option>
+    <option value="ripple">XRP</option>
+    <option value="dogecoin">Dogecoin</option>
+    <option value="solana">Solana</option>
+  </select>
+  <button onclick="loadCoin()">Показати</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function loadCoin() {
+      const id = document.getElementById('coin').value;
+      const box = document.getElementById('result');
+
+      const r = await fetch('https://api.coingecko.com/api/v3/coins/' + id);
+      const d = await r.json();
+
+      box.innerHTML = `
+        <div class="card">
+          <img src="${d.image.large}" alt="${d.name}">
+          <h2>${d.name}</h2>
+          <p>Офіційний сайт: <a href="${d.links.homepage[0]}" target="_blank">${d.links.homepage[0]}</a></p>
+          <p>Опис: ${d.description.en.split('. ')[0]}.</p>
+          <p>Курс: $${d.market_data.current_price.usd}</p>
+          <p>Зміна за 24 години: ${d.market_data.price_change_percentage_24h.toFixed(2)}%</p>
+        </div>
+      `;
+    }
+  </script>
+
+</body>
+</html>
